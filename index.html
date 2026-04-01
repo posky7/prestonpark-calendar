@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preston Park HOA – Calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { background: #F1F5F9; font-family: 'Source Sans 3', sans-serif; color: #111827; }
+
+    /* ── Buttons ── */
+    .btn-primary { background: #1E3A5F; color: #FFF; border: none; padding: 10px 22px; border-radius: 6px; font-weight: 700; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; transition: all .18s; box-shadow: 0 2px 6px rgba(30,58,95,.25); }
+    .btn-primary:hover { background: #1e4d8c; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(30,58,95,.35); }
+    .btn-ghost { background: #FFF; color: #374151; border: 1px solid #D1D5DB; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 500; transition: all .18s; }
+    .btn-ghost:hover { border-color: #1E3A5F; color: #1E3A5F; background: #EFF6FF; }
+    .btn-all-items { background: rgba(255,255,255,.12); color: #FFF; border: 1px solid rgba(255,255,255,.32); padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .04em; transition: all .18s; }
+    .btn-all-items:hover { background: rgba(255,255,255,.22); }
+    .btn-back { background: rgba(255,255,255,.12); color: #FFF; border: 1px solid rgba(255,255,255,.3); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 500; transition: background .18s; }
+    .btn-back:hover { background: rgba(255,255,255,.22); }
+    .btn-danger { background: #FFF; color: #B91C1C; border: 1px solid #FECACA; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 500; transition: all .18s; }
+    .btn-danger:hover { background: #FEE2E2; border-color: #B91C1C; }
+    .nav-btn { background: #FFF; border: 1.5px solid #D1D5DB; color: #374151; width: 36px; height: 36px; border-radius: 7px; cursor: pointer; font-size: 20px; display: inline-flex; align-items: center; justify-content: center; transition: all .18s; flex-shrink: 0; line-height: 1; }
+    .nav-btn:hover { border-color: #1E3A5F; color: #1E3A5F; background: #EFF6FF; }
+
+    /* ── Forms ── */
+    input, select, textarea { background: #FFF; border: 1.5px solid #D1D5DB; color: #111827; padding: 10px 14px; border-radius: 7px; font-family: 'Source Sans 3', sans-serif; font-size: 14px; width: 100%; transition: border-color .18s, box-shadow .18s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #1E3A5F; box-shadow: 0 0 0 3px rgba(30,58,95,.12); }
+    input::placeholder, textarea::placeholder { color: #9CA3AF; }
+    select option { background: #FFF; color: #111827; }
+    label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6B7280; display: block; margin-bottom: 6px; font-weight: 600; }
+    .field-error { color: #B91C1C; font-size: 12px; margin-top: 4px; font-weight: 500; }
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    /* ── Overlay / Modal ── */
+    .overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    .overlay.hidden, .hidden { display: none; }
+    .modal { background: #FFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 30px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(15,23,42,.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+    .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #111827; }
+    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #F3F4F6; margin-top: 6px; }
+    .detail-modal { background: #FFF; border: 1px solid #E5E7EB; border-radius: 14px; width: 100%; max-width: 480px; overflow: hidden; box-shadow: 0 20px 60px rgba(15,23,42,.2); }
+    .detail-color-bar { height: 5px; }
+    .detail-header { padding: 24px 28px 18px; border-bottom: 1px solid #F3F4F6; }
+    .detail-header-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .detail-body { padding: 20px 28px 26px; }
+    .detail-row { display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start; }
+    .detail-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #9CA3AF; width: 86px; flex-shrink: 0; padding-top: 3px; font-weight: 600; }
+    .detail-value { font-size: 14px; color: #1F2937; flex: 1; line-height: 1.6; }
+    .detail-footer { display: flex; gap: 10px; padding-top: 18px; border-top: 1px solid #F3F4F6; margin-top: 6px; justify-content: flex-end; }
+
+    /* ── Tags / Badges ── */
+    .tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+    .recur-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+
+    /* ── Top Nav ── */
+    #top-nav { background: #1E3A5F; box-shadow: 0 2px 10px rgba(15,23,42,.2); }
+    .nav-inner { max-width: 1140px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .nav-brand-sub { color: rgba(255,255,255,.55); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 2px; }
+    .nav-brand-title { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3.5vw, 26px); font-weight: 900; color: #FFF; line-height: 1.1; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* ── Calendar Page ── */
+    #page-calendar { display: block; }
+    #page-allitems { display: none; }
+    .main-content { max-width: 1140px; margin: 0 auto; padding: 24px 16px; }
+    .main-grid { display: grid; grid-template-columns: 1fr 272px; gap: 20px; align-items: start; }
+
+    /* ── Calendar Card ── */
+    .cal-card { background: #FFF; border-radius: 12px; box-shadow: 0 2px 12px rgba(15,23,42,.08); overflow: hidden; }
+    .cal-card-header { background: #F8FAFC; border-bottom: 1px solid #E5E7EB; padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+    .cal-month-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #111827; flex: 1; text-align: center; }
+    .cal-body { padding: 12px 12px 0; }
+    .cal-day-headers { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
+    .cal-day-header { text-align: center; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #9CA3AF; padding: 3px 0; font-weight: 600; }
+    .cal-day-header.wknd { color: #94A3B8; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 12px; }
+    .cal-cell { background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 6px; min-height: 100px; transition: border-color .18s, box-shadow .18s; overflow: hidden; cursor: default; }
+    .cal-cell:hover { border-color: #93C5FD; box-shadow: 0 2px 8px rgba(30,58,95,.08); }
+    .cal-cell.today { border-color: #1E40AF; border-width: 2px; background: #EFF6FF; }
+    .cal-cell.weekend { background: #F8FAFC; }
+    .cal-cell.empty { background: transparent; border: none; min-height: 0; }
+    .day-num { font-size: 11px; font-weight: 700; margin-bottom: 3px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: #374151; }
+    .day-num.today-num { background: #1E40AF; color: #FFF; }
+    .day-num.wknd-num { color: #94A3B8; }
+    .event-pill { display: block; width: 100%; text-align: left; border: none; border-radius: 3px; padding: 2px 6px; margin-bottom: 2px; font-size: 10.5px; font-weight: 600; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .15s, transform .12s; font-family: 'Source Sans 3', sans-serif; line-height: 1.65; }
+    .event-pill:hover { opacity: .82; transform: translateX(1px); }
+    .more-badge { font-size: 10px; color: #6B7280; padding: 1px 4px; font-weight: 500; }
+    .cal-legend { border-top: 1px solid #F3F4F6; padding: 10px 18px; display: flex; flex-wrap: wrap; gap: 6px 18px; background: #F8FAFC; }
+    .legend-item { font-size: 11px; color: #6B7280; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    /* ── Sidebar ── */
+    .sidebar-card { background: #FFF; border-radius: 12px; box-shadow: 0 2px 12px rgba(15,23,42,.08); overflow: hidden; }
+    .sidebar-header { background: #1E3A5F; padding: 14px 16px; }
+    .sidebar-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 2px; font-weight: 600; }
+    .sidebar-month { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #FFF; }
+    .sidebar-count { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 3px; }
+    .sidebar-body { padding: 12px; }
+    .sidebar-scroll { max-height: 420px; overflow-y: auto; padding-right: 2px; }
+    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll::-webkit-scrollbar-track { background: #F1F5F9; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #FFF; border-radius: 8px; margin-bottom: 6px; border-left: 4px solid; cursor: pointer; transition: background .15s, box-shadow .15s; box-shadow: 0 1px 3px rgba(15,23,42,.06); }
+    .sidebar-item:hover { background: #F8FAFC; box-shadow: 0 2px 8px rgba(15,23,42,.1); }
+    .sidebar-date-badge { flex-shrink: 0; text-align: center; width: 36px; border-radius: 6px; padding: 4px 0; }
+    .sidebar-day { font-size: 16px; font-weight: 800; line-height: 1; }
+    .sidebar-dow { font-size: 9px; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+    .sidebar-title { font-weight: 600; font-size: 12px; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-meta { font-size: 10px; color: #6B7280; margin-top: 2px; }
+    .sidebar-chevron { color: #9CA3AF; font-size: 14px; flex-shrink: 0; }
+    .sidebar-empty { text-align: center; padding: 28px 10px; }
+    .sidebar-empty-icon { font-size: 28px; margin-bottom: 8px; }
+    .sidebar-empty-text { font-size: 13px; color: #6B7280; font-style: italic; }
+
+    /* ── All Items Page ── */
+    .allitems-content { max-width: 860px; margin: 0 auto; padding: 28px 20px; }
+    .allitems-meta { margin-bottom: 28px; }
+    .allitems-meta p { color: #6B7280; font-size: 13px; margin-top: 6px; }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1.5px solid #D1D5DB; background: #FFF; color: #374151; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Source Sans 3', sans-serif; letter-spacing: .03em; transition: all .16s; }
+    .filter-pill:hover { border-color: #1E3A5F; color: #1E3A5F; }
+    .filter-pill.active { color: #FFF; border-color: transparent; }
+    .cat-section { margin-bottom: 36px; }
+    .cat-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom-width: 2px; border-bottom-style: solid; }
+    .cat-section-icon { font-size: 20px; }
+    .cat-section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+    .cat-section-count { font-size: 11px; color: #6B7280; margin-top: 1px; }
+    .ai-card { background: #FFF; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; border-left: 4px solid; display: flex; align-items: flex-start; gap: 14px; cursor: pointer; transition: box-shadow .15s, transform .12s; box-shadow: 0 1px 4px rgba(15,23,42,.06); }
+    .ai-card:hover { box-shadow: 0 4px 16px rgba(15,23,42,.12); transform: translateY(-1px); }
+    .ai-card-main { flex: 1; min-width: 0; }
+    .ai-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .ai-card-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 16px; color: #111827; line-height: 1.3; }
+    .ai-card-meta { font-size: 12px; color: #6B7280; margin-bottom: 4px; }
+    .ai-card-meta strong { color: #374151; }
+    .ai-card-desc { font-size: 13px; color: #4B5563; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .ai-card-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; align-self: center; }
+    .allitems-empty { text-align: center; padding: 60px 20px; }
+    .allitems-empty-icon { font-size: 40px; margin-bottom: 14px; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 28px; right: 28px; padding: 13px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; z-index: 200; box-shadow: 0 6px 24px rgba(15,23,42,.2); animation: slideUp .28s ease; display: none; }
+    #toast.show { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Recurrence hint ── */
+    .recur-hint { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 7px; padding: 11px 14px; font-size: 13px; color: #1E3A8A; line-height: 1.6; margin-bottom: 16px; display: none; }
+
+    /* ── Recurrence Edit Scope Modal ── */
+    .scope-modal { background: #FFF; border-radius: 14px; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 20px 60px rgba(15,23,42,.25); }
+    .scope-modal-header { background: #1E3A5F; padding: 22px 26px; text-align: center; }
+    .scope-modal-icon { font-size: 28px; margin-bottom: 8px; }
+    .scope-modal-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #FFF; }
+    .scope-modal-subtitle { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 4px; }
+    .scope-modal-body { padding: 22px 26px 26px; }
+    .scope-option { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border: 2px solid #E5E7EB; border-radius: 10px; cursor: pointer; transition: all .18s; margin-bottom: 10px; }
+    .scope-option:hover { border-color: #93C5FD; background: #F0F7FF; }
+    .scope-option.recommended { border-color: #1E40AF; background: #EFF6FF; }
+    .scope-option-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D1D5DB; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all .18s; }
+    .scope-option.recommended .scope-option-radio { border-color: #1E40AF; }
+    .scope-option.recommended .scope-option-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #1E40AF; }
+    .scope-option-content { flex: 1; }
+    .scope-option-label { font-weight: 700; font-size: 14px; color: #111827; margin-bottom: 3px; }
+    .scope-option-desc { font-size: 12px; color: #6B7280; line-height: 1.5; }
+    .scope-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #DBEAFE; color: #1E40AF; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+    .scope-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; padding-top: 16px; border-top: 1px solid #F3F4F6; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .cal-cell { min-height: 72px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    
+
+    /* ══ Auth Modal ══════════════════════════════════════════ */
+    .auth-modal {
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      box-shadow: 0 28px 70px rgba(15,23,42,.3);
+    }
+    .auth-modal-header {
+      background: #1E3A5F;
+      padding: 28px 32px 24px;
+      text-align: center;
+    }
+    .auth-modal-icon-wrap {
+      width: 58px; height: 58px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.3);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 14px;
+    }
+    .auth-modal-org {
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.6); font-weight: 600; margin-bottom: 5px;
+    }
+    .auth-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 800; color: #FFFFFF; line-height: 1.2;
+    }
+    .auth-modal-subtitle {
+      font-size: 13px; color: rgba(255,255,255,.6); margin-top: 5px;
+    }
+    .auth-modal-body { padding: 26px 32px 28px; }
+    .auth-field { margin-bottom: 18px; }
+    .auth-field label {
+      font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+      color: #374151; display: block; margin-bottom: 7px; font-weight: 700;
+    }
+    .auth-input-wrap { position: relative; }
+    .auth-input-wrap input {
+      background: #F8FAFC; border: 1.5px solid #D1D5DB; color: #111827;
+      padding: 12px 46px 12px 16px; border-radius: 8px;
+      font-family: 'Source Sans 3', sans-serif; font-size: 15px; width: 100%;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .auth-input-wrap input:focus {
+      outline: none; border-color: #1E3A5F;
+      box-shadow: 0 0 0 3px rgba(30,58,95,.12); background: #FFFFFF;
+    }
+    .auth-input-wrap input::placeholder { color: #9CA3AF; }
+    .auth-pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #9CA3AF;
+      font-size: 18px; padding: 4px; transition: color .15s; line-height: 1;
+    }
+    .auth-pw-toggle:hover { color: #1E3A5F; }
+    .auth-error {
+      background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px;
+      padding: 10px 14px; font-size: 13px; color: #B91C1C; font-weight: 500;
+      margin-bottom: 18px; display: none; align-items: center; gap: 8px;
+      line-height: 1.4;
+    }
+    .auth-error.show { display: flex; }
+    .auth-attempts {
+      font-size: 11px; color: #9CA3AF; text-align: right;
+      margin-top: 5px; min-height: 16px;
+    }
+    .auth-notice {
+      background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px;
+      padding: 10px 14px; font-size: 12.5px; color: #1E3A8A;
+      margin-bottom: 22px; display: flex; align-items: flex-start; gap: 8px;
+      line-height: 1.5;
+    }
+    .auth-notice-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+    .auth-actions {
+      display: flex; gap: 10px; align-items: center; justify-content: flex-end;
+    }
+    .auth-btn-cancel {
+      background: #FFFFFF; color: #374151;
+      border: 1.5px solid #D1D5DB; padding: 10px 20px;
+      border-radius: 7px; cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px; font-weight: 600;
+      transition: all .18s; min-width: 90px;
+    }
+    .auth-btn-cancel:hover { border-color: #6B7280; color: #111827; }
+    .auth-btn-signin {
+      background: #1E3A5F; color: #FFFFFF;
+      border: 1.5px solid #1E3A5F; padding: 10px 20px;
+      border-radius: 7px; cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px; font-weight: 700;
+      transition: all .18s; min-width: 90px;
+      box-shadow: 0 2px 8px rgba(30,58,95,.25);
+    }
+    .auth-btn-signin:hover:not(:disabled) { background: #1e4d8c; border-color: #1e4d8c; transform: translateY(-1px); }
+    .auth-btn-signin:disabled { background: #94A3B8; border-color: #94A3B8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  </style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════════
+     TOP NAV
+══════════════════════════════════════════════════ -->
+<div id="top-nav">
+  <div class="nav-inner">
+    <div>
+      <div class="nav-brand-sub">Preston Park Homeowner's Association</div>
+      <div class="nav-brand-title">Calendar</div>
+    </div>
+    <div class="nav-actions" style="gap:8px;" id="nav-actions">
+      <div id="nav-auth-area" style="display:flex;align-items:center;gap:8px;">
+        <!-- Populated by JS -->
+      </div>
+      <button class="btn-all-items" onclick="showPage('allitems')">☰ All Items</button>
+      <button class="btn-primary" onclick="openAddForm()">+ Add Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CALENDAR PAGE
+══════════════════════════════════════════════════ -->
+<div id="page-calendar">
+  <div class="main-content">
+    <div class="main-grid">
+
+      <!-- Calendar card -->
+      <div class="cal-card">
+        <div class="cal-card-header">
+          <button class="nav-btn" onclick="prevMonth()">&#8249;</button>
+          <div class="cal-month-title" id="month-title"></div>
+          <button class="nav-btn" onclick="nextMonth()">&#8250;</button>
+          <button class="btn-ghost" style="margin-left:4px;font-size:11px;" onclick="goToday()">Today</button>
+        </div>
+        <div class="cal-body">
+          <div class="cal-day-headers">
+            <div class="cal-day-header wknd">Sun</div>
+            <div class="cal-day-header">Mon</div>
+            <div class="cal-day-header">Tue</div>
+            <div class="cal-day-header">Wed</div>
+            <div class="cal-day-header">Thu</div>
+            <div class="cal-day-header">Fri</div>
+            <div class="cal-day-header wknd">Sat</div>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <div class="cal-legend" id="cal-legend"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar-card">
+        <div class="sidebar-header">
+          <div class="sidebar-label">Monthly Items</div>
+          <div class="sidebar-month" id="sidebar-month-title"></div>
+          <div class="sidebar-count" id="sidebar-count"></div>
+        </div>
+        <div class="sidebar-body">
+          <div class="sidebar-scroll" id="sidebar-list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     ALL ITEMS PAGE
+══════════════════════════════════════════════════ -->
+<div id="page-allitems" style="display:none;">
+  <div id="allitems-nav" style="background:#1E3A5F;border-bottom:none;">
+    <div style="max-width:860px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <button class="btn-back" onclick="showPage('calendar')">← Calendar</button>
+      <div style="flex:1;">
+        <div style="color:rgba(255,255,255,.55);font-size:10px;letter-spacing:.2em;text-transform:uppercase;">Preston Park Homeowner's Association</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:20px;color:#FFF;">All Calendar Items</div>
+      </div>
+      <div id="allitems-total-badge" style="background:rgba(255,255,255,.15);color:#FFF;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;"></div>
+    </div>
+  </div>
+  <div class="allitems-content">
+    <div class="filter-row" id="filter-row"></div>
+    <div id="allitems-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     AUTH MODAL (write-action gate)
+══════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="auth-modal-overlay" onclick="closeAuthIfBg(event)">
+  <div class="auth-modal">
+
+    <!-- Header -->
+    <div class="auth-modal-header">
+      <div class="auth-modal-icon-wrap">🔒</div>
+      <div class="auth-modal-org">Preston Park Homeowner's Association</div>
+      <div class="auth-modal-title">Board Sign In</div>
+      <div class="auth-modal-subtitle">Required to add, edit, or delete calendar items</div>
+    </div>
+
+    <!-- Body -->
+    <div class="auth-modal-body">
+
+      <!-- Error banner -->
+      <div class="auth-error" id="auth-error">
+        <span>⚠️</span>
+        <span id="auth-error-msg">Invalid username or password.</span>
+      </div>
+
+      <!-- Info notice -->
+      <div class="auth-notice">
+        <span class="auth-notice-icon">ℹ️</span>
+        <span>The calendar is publicly viewable. Board sign-in is only needed to manage items.</span>
+      </div>
+
+      <!-- Username -->
+      <div class="auth-field">
+        <label for="auth-username">Username</label>
+        <div class="auth-input-wrap">
+          <input type="text" id="auth-username"
+            placeholder="Enter your username"
+            autocomplete="username" />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="auth-field">
+        <label for="auth-password">Password</label>
+        <div class="auth-input-wrap">
+          <input type="password" id="auth-password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')doLogin()" />
+          <button class="auth-pw-toggle" id="auth-pw-toggle"
+            onclick="toggleAuthPw()" type="button" title="Show / hide password">👁</button>
+        </div>
+        <div class="auth-attempts" id="auth-attempts-msg"></div>
+      </div>
+
+      <!-- Actions: Cancel + Sign In side by side -->
+      <div class="auth-actions">
+        <button class="auth-btn-cancel" onclick="closeLoginModal()">Cancel</button>
+        <button class="auth-btn-signin" id="auth-login-btn" onclick="doLogin()">Sign In</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     DETAIL MODAL
+══════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="detail-overlay" onclick="closeDetailIfBg(event)">
+  <div class="detail-modal">
+    <div class="detail-color-bar" id="detail-color-bar"></div>
+    <div class="detail-header">
+      <div class="detail-header-inner">
+        <div style="flex:1;">
+          <span class="tag" id="detail-tag"></span>
+          <h2 id="detail-title" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#111827;line-height:1.25;"></h2>
+        </div>
+        <button class="nav-btn" style="margin-top:2px;" onclick="closeDetail()">✕</button>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-row"><div class="detail-label">Date</div><div class="detail-value" id="detail-date"></div></div>
+      <div class="detail-row"><div class="detail-label">Recurrence</div><div class="detail-value" id="detail-recurrence"></div></div>
+      <div class="detail-row"><div class="detail-label">Added By</div><div class="detail-value" id="detail-addedby"></div></div>
+      <div class="detail-row"><div class="detail-label">Notes</div><div class="detail-value" id="detail-notes"></div></div>
+      <div class="detail-footer">
+        <button class="btn-danger" id="detail-delete-btn">Delete</button>
+        <button class="btn-ghost" id="detail-edit-btn">Edit Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     ADD / EDIT FORM MODAL
+══════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="form-overlay" onclick="closeFormIfBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="form-modal-title">Add Calendar Item</h3>
+      <button class="nav-btn" onclick="closeForm()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label for="f-title">Title *</label>
+      <input type="text" id="f-title" placeholder="e.g. Annual Strategy Session" />
+      <div class="field-error hidden" id="err-title">Title is required</div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="f-date" id="f-date-label">Date *</label>
+        <input type="date" id="f-date" />
+        <div class="field-error hidden" id="err-date">Date is required</div>
+      </div>
+      <div>
+        <label for="f-recurrence">Recurrence</label>
+        <select id="f-recurrence" onchange="onRecurrenceChange()">
+          <option value="none">One-time</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="biweekly">Bi-Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="annual">Annually</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row hidden" id="monthly-nth-options" style="margin-top:-4px;">
+      <div>
+        <label for="f-nth-week">Which Week</label>
+        <select id="f-nth-week" onchange="onRecurrenceChange()">
+          <option value="1">1st</option>
+          <option value="2">2nd</option>
+          <option value="3">3rd</option>
+          <option value="4">4th</option>
+          <option value="5">Last</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-nth-day">Day of Week</label>
+        <select id="f-nth-day" onchange="onRecurrenceChange()">
+          <option value="0">Sunday</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="f-category">Category</label>
+      <select id="f-category">
+        <option value="meeting">🗓 Meeting</option>
+        <option value="deadline">⏰ Deadline</option>
+        <option value="event">🎯 Event</option>
+        <option value="review">📋 Review</option>
+        <option value="vendor-onsite">🏢 Vendor Onsite</option>
+        <option value="other">📌 Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="f-description">Description / Notes</label>
+      <textarea id="f-description" rows="3" placeholder="Agenda, location, or relevant notes…" style="resize:vertical;"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="f-addedby">Added By *</label>
+      <select id="f-addedby">
+        <option value="">— Select Role —</option>
+        <option value="President">President</option>
+        <option value="Vice President">Vice President</option>
+        <option value="Treasurer">Treasurer</option>
+        <option value="Secretary">Secretary</option>
+        <option value="Director">Director</option>
+      </select>
+      <div class="field-error hidden" id="err-addedby">Role selection is required</div>
+    </div>
+
+    <div class="recur-hint" id="edit-scope-hint" style="display:none; background:#FEF3C7; border-color:#FDE68A; color:#92400E;"></div>
+
+    <div class="recur-hint" id="recur-hint">
+      🔁 Repeats <strong id="recur-hint-label"></strong> — will appear on all future occurrences automatically.
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn-primary" id="form-submit-btn" onclick="handleSubmit()">Add to Calendar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     RECURRENCE EDIT SCOPE MODAL
+══════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="scope-overlay" onclick="closeScopeIfBg(event)">
+  <div class="scope-modal">
+    <div class="scope-modal-header">
+      <div class="scope-modal-icon">🔁</div>
+      <div class="scope-modal-title">Edit Recurring Item</div>
+      <div class="scope-modal-subtitle">This is a recurring calendar item. Choose how to apply your changes.</div>
+    </div>
+    <div class="scope-modal-body">
+      <div class="scope-option recommended" id="scope-opt-future" onclick="selectScope('future')">
+        <div class="scope-option-radio"></div>
+        <div class="scope-option-content">
+          <div class="scope-option-label">Current &amp; Future Occurrences<span class="scope-badge">Recommended</span></div>
+          <div class="scope-option-desc">Changes apply from today forward. Past occurrences remain unchanged.</div>
+        </div>
+      </div>
+      <div class="scope-option" id="scope-opt-all" onclick="selectScope('all')">
+        <div class="scope-option-radio"></div>
+        <div class="scope-option-content">
+          <div class="scope-option-label">All Occurrences (Past &amp; Future)</div>
+          <div class="scope-option-desc">Changes apply to every occurrence, including those already past.</div>
+        </div>
+      </div>
+      <div class="scope-modal-actions">
+        <button class="btn-ghost" onclick="closeScopeModal()">Cancel</button>
+        <button class="btn-primary" id="scope-continue-btn" onclick="confirmScope()">Continue to Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     TOAST
+══════════════════════════════════════════════════ -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════ -->
+<script>
+const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+const RECURRENCE_LABELS = {
+  none:"One-time", daily:"Daily", weekly:"Weekly", biweekly:"Bi-Weekly",
+  monthly:"Monthly", quarterly:"Quarterly", annual:"Annually"
+};
+const NTH_WEEK_LABELS = {1:"1st",2:"2nd",3:"3rd",4:"4th",5:"Last"};
+const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function getRecurrenceLabel(item) {
+  if (item.recurrence === "monthly" && item.nthWeek != null) {
+    return `Monthly — ${NTH_WEEK_LABELS[item.nthWeek]} ${DAY_NAMES[item.nthDay]}`;
+  }
+  if (item.recurrence === "monthly-nth") {
+    return `Monthly — ${NTH_WEEK_LABELS[item.nthWeek]} ${DAY_NAMES[item.nthDay]}`;
+  }
+  return RECURRENCE_LABELS[item.recurrence] || item.recurrence;
+}
+
+const CATEGORY_META = {
+  meeting:  { pill:"#1E40AF", pillText:"#FFF", tag:"#DBEAFE", tagText:"#1E3A8A", dot:"#1E40AF", icon:"🗓", label:"Meetings" },
+  deadline: { pill:"#B91C1C", pillText:"#FFF", tag:"#FEE2E2", tagText:"#7F1D1D", dot:"#B91C1C", icon:"⏰", label:"Deadlines" },
+  event:    { pill:"#065F46", pillText:"#FFF", tag:"#D1FAE5", tagText:"#064E3B", dot:"#065F46", icon:"🎯", label:"Events" },
+  review:   { pill:"#6D28D9", pillText:"#FFF", tag:"#EDE9FE", tagText:"#4C1D95", dot:"#6D28D9", icon:"📋", label:"Reviews" },
+  "vendor-onsite": { pill:"#0E7490", pillText:"#FFF", tag:"#CFFAFE", tagText:"#155E75", dot:"#0E7490", icon:"🏢", label:"Vendor Onsite" },
+  other:    { pill:"#92400E", pillText:"#FFF", tag:"#FEF3C7", tagText:"#78350F", dot:"#92400E", icon:"📌", label:"Other" }
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let viewYear, viewMonth, items = [], editId = null, currentDetailId = null, toastTimer = null;
+let activeFilter = "all";
+let editScope = "future"; // "future" or "all" — controls how recurring edits are applied
+
+const today = new Date();
+
+function genId() { return Math.random().toString(36).slice(2,10); }
+
+// Replace the old load/save logic
+async function loadItems() {
+  try {
+    const res = await fetch("/.netlify/functions/calendar");
+    if (res.ok) {
+      items = await res.json();
+    }
+  } catch (e) {
+    console.error("Failed to load items", e);
+    items = [];
+  }
+  renderCalendar();
+  if (document.getElementById("page-allitems").style.display !== "none") renderAllItems();
+}
+
+async function saveItems() {
+  try {
+    await fetch("/.netlify/functions/calendar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items)
+    });
+  } catch (e) {
+    console.error("Failed to save items", e);
+    showToast("Save failed – check connection", "error");
+  }
+}
+
+// ── Occurrences ──────────────────────────────────────────────────────────────
+function getOccurrencesInMonth(item, year, month) {
+  const dates = [];
+  const firstDay = new Date(year, month, 1);
+  const lastDay  = new Date(year, month + 1, 0);
+  const endDate  = item.endDate ? new Date(item.endDate + "T23:59:59") : null;
+
+  // If item has an endDate and the entire month is after it, skip
+  if (endDate && firstDay > endDate) return dates;
+
+  if (item.recurrence === "none") {
+    const d = new Date(item.date + "T00:00:00");
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      if (!endDate || d <= endDate) dates.push(d.getDate());
+    }
+    return dates;
+  }
+  const start = new Date(item.date + "T00:00:00");
+
+  if (item.recurrence === "daily") {
+    let cur = new Date(Math.max(+start, +firstDay));
+    while (cur <= lastDay) {
+      if (!endDate || cur <= endDate) dates.push(cur.getDate());
+      cur = new Date(cur); cur.setDate(cur.getDate()+1);
+    }
+    return dates;
+  }
+  if (item.recurrence === "weekly") {
+    const dow = start.getDay();
+    let cur = new Date(firstDay);
+    while (cur.getDay() !== dow) cur.setDate(cur.getDate()+1);
+    while (cur <= lastDay) {
+      if (cur >= start && (!endDate || cur <= endDate)) dates.push(cur.getDate());
+      cur = new Date(cur); cur.setDate(cur.getDate()+7);
+    }
+    return dates;
+  }
+  if (item.recurrence === "biweekly") {
+    const dow = start.getDay();
+    let cur = new Date(firstDay);
+    while (cur.getDay() !== dow) cur.setDate(cur.getDate()+1);
+    while (cur <= lastDay) {
+      const diff = Math.round((cur - start) / (7*86400000));
+      if (cur >= start && diff % 2 === 0 && (!endDate || cur <= endDate)) dates.push(cur.getDate());
+      cur = new Date(cur); cur.setDate(cur.getDate()+7);
+    }
+    return dates;
+  }
+  if (item.recurrence === "monthly" || item.recurrence === "monthly-nth") {
+    const targetDay = item.nthDay != null ? item.nthDay : start.getDay();
+    const targetWeek = item.nthWeek != null ? item.nthWeek : Math.ceil(start.getDate() / 7);
+    let cur = new Date(year, month, 1);
+    while (cur.getDay() !== targetDay) cur.setDate(cur.getDate() + 1);
+    const occurrences = [];
+    while (cur.getMonth() === month) {
+      occurrences.push(cur.getDate());
+      cur = new Date(cur); cur.setDate(cur.getDate() + 7);
+    }
+    let pick;
+    if (targetWeek === 5) {
+      pick = occurrences[occurrences.length - 1];
+    } else {
+      pick = occurrences[targetWeek - 1];
+    }
+    if (pick) {
+      const c = new Date(year, month, pick);
+      if (c >= start && (!endDate || c <= endDate)) dates.push(pick);
+    }
+    return dates;
+  }
+  if (item.recurrence === "quarterly") {
+    const dom = start.getDate(), sm = start.getMonth();
+    const diff = ((month - sm) % 3 + 12) % 3;
+    if (diff === 0 && dom <= lastDay.getDate()) {
+      const c = new Date(year, month, dom);
+      if (c >= start && (!endDate || c <= endDate)) dates.push(dom);
+    }
+    return dates;
+  }
+  if (item.recurrence === "annual") {
+    if (start.getMonth() === month) {
+      const dom = start.getDate();
+      const c = new Date(year, month, dom);
+      if (c >= start && (!endDate || c <= endDate)) dates.push(dom);
+    }
+    return dates;
+  }
+  return dates;
+}
+
+function buildCalMap(year, month) {
+  const map = {};
+  items.forEach(item => {
+    getOccurrencesInMonth(item, year, month).forEach(d => {
+      if (!map[d]) map[d] = [];
+      map[d].push(item);
+    });
+  });
+  return map;
+}
+
+// ── Page switching ────────────────────────────────────────────────────────────
+function showPage(page) {
+  document.getElementById("page-calendar").style.display  = page === "calendar"  ? "block" : "none";
+  document.getElementById("page-allitems").style.display  = page === "allitems" ? "block" : "none";
+  if (page === "allitems") renderAllItems();
+}
+
+// ── Calendar render ───────────────────────────────────────────────────────────
+function renderCalendar() {
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const firstDow    = new Date(viewYear, viewMonth, 1).getDay();
+  const calMap      = buildCalMap(viewYear, viewMonth);
+
+  document.getElementById("month-title").textContent       = `${MONTHS[viewMonth]} ${viewYear}`;
+  document.getElementById("sidebar-month-title").textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+
+  // Month entries for sidebar
+  const monthEntries = [];
+  Object.entries(calMap).forEach(([day, dayItems]) => {
+    dayItems.forEach(item => monthEntries.push({ item, day: parseInt(day) }));
+  });
+  monthEntries.sort((a,b) => a.day - b.day);
+  document.getElementById("sidebar-count").textContent =
+    `${monthEntries.length} event${monthEntries.length !== 1 ? "s" : ""} this month`;
+
+  // ── Grid ──
+  const grid = document.getElementById("cal-grid");
+  grid.innerHTML = "";
+
+  for (let i = 0; i < firstDow; i++) {
+    const empty = document.createElement("div");
+    empty.className = "cal-cell empty";
+    grid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement("div");
+    const dow = (firstDow + d - 1) % 7;
+    const isTodayCell = d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+    const isWknd = dow === 0 || dow === 6;
+    cell.className = `cal-cell${isTodayCell ? " today" : ""}${isWknd ? " weekend" : ""}`;
+
+    // Day number
+    const numEl = document.createElement("div");
+    numEl.className = `day-num${isTodayCell ? " today-num" : isWknd ? " wknd-num" : ""}`;
+    numEl.textContent = d;
+    cell.appendChild(numEl);
+
+    // Pills
+    const dayItems = calMap[d] || [];
+    dayItems.slice(0, 3).forEach(item => {
+      const c = CATEGORY_META[item.category];
+      const pill = document.createElement("button");
+      pill.className = "event-pill";
+      pill.style.background = c.pill;
+      pill.style.color = c.pillText;
+      pill.title = item.title + " — click for details";
+      pill.textContent = item.title;
+      pill.addEventListener("click", () => openDetail(item.id));
+      cell.appendChild(pill);
+    });
+    if (dayItems.length > 3) {
+      const more = document.createElement("div");
+      more.className = "more-badge";
+      more.textContent = `+${dayItems.length - 3} more`;
+      cell.appendChild(more);
+    }
+    grid.appendChild(cell);
+  }
+
+  // ── Legend ──
+  const legend = document.getElementById("cal-legend");
+  legend.innerHTML = "";
+  Object.entries(CATEGORY_META).forEach(([, c]) => {
+    const item = document.createElement("span");
+    item.className = "legend-item";
+    item.innerHTML = `<span class="legend-dot" style="background:${c.dot}"></span>${c.label}`;
+    legend.appendChild(item);
+  });
+
+  // ── Sidebar ──
+  const sidebarList = document.getElementById("sidebar-list");
+  sidebarList.innerHTML = "";
+
+  if (monthEntries.length === 0) {
+    sidebarList.innerHTML = `
+      <div class="sidebar-empty">
+        <div class="sidebar-empty-icon">📭</div>
+        <div class="sidebar-empty-text">No events in ${MONTHS[viewMonth]}</div>
+      </div>`;
+    return;
+  }
+
+  monthEntries.forEach(({ item, day }) => {
+    const c = CATEGORY_META[item.category];
+    const dow = DAYS[new Date(viewYear, viewMonth, day).getDay()];
+    const el = document.createElement("div");
+    el.className = "sidebar-item";
+    el.style.borderColor = c.pill;
+    el.innerHTML = `
+      <div class="sidebar-date-badge" style="background:${c.tag};">
+        <div class="sidebar-day" style="color:${c.tagText};">${day}</div>
+        <div class="sidebar-dow" style="color:${c.tagText};">${dow}</div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="sidebar-title">${escHtml(item.title)}</div>
+        <div class="sidebar-meta">${c.icon} ${c.label} · ${getRecurrenceLabel(item)}</div>
+      </div>
+      <span class="sidebar-chevron">›</span>`;
+    el.addEventListener("click", () => openDetail(item.id));
+    sidebarList.appendChild(el);
+  });
+}
+
+// ── Month navigation ──────────────────────────────────────────────────────────
+function prevMonth() {
+  if (viewMonth === 0) { viewYear--; viewMonth = 11; } else viewMonth--;
+  renderCalendar();
+}
+function nextMonth() {
+  if (viewMonth === 11) { viewYear++; viewMonth = 0; } else viewMonth++;
+  renderCalendar();
+}
+function goToday() { viewYear = today.getFullYear(); viewMonth = today.getMonth(); renderCalendar(); }
+
+// ── Detail modal ──────────────────────────────────────────────────────────────
+function openDetail(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  currentDetailId = id;
+  const c = CATEGORY_META[item.category];
+  const [y, m, d] = item.date.split("-");
+  const dateStr = `${MONTHS[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+
+  document.getElementById("detail-color-bar").style.background = c.pill;
+  document.getElementById("detail-tag").style.background = c.tag;
+  document.getElementById("detail-tag").style.color = c.tagText;
+  document.getElementById("detail-tag").textContent = `${c.icon} ${item.category}`;
+  document.getElementById("detail-title").textContent = item.title;
+  let detailDateText = dateStr;
+  if (item.endDate) {
+    const [ey, em, ed] = item.endDate.split("-");
+    detailDateText += ` — Ended ${MONTHS[parseInt(em)-1]} ${parseInt(ed)}, ${ey}`;
+  }
+  document.getElementById("detail-date").textContent = detailDateText;
+  document.getElementById("detail-recurrence").innerHTML =
+    `${item.recurrence === "none" ? "📌" : "🔁"} ${getRecurrenceLabel(item)}`;
+  document.getElementById("detail-addedby").textContent = item.addedBy;
+  const notesEl = document.getElementById("detail-notes");
+  if (item.description) {
+    notesEl.textContent = item.description;
+    notesEl.style.color = "#1F2937";
+    notesEl.style.fontStyle = "normal";
+  } else {
+    notesEl.textContent = "No notes added.";
+    notesEl.style.color = "#9CA3AF";
+    notesEl.style.fontStyle = "italic";
+  }
+  document.getElementById("detail-delete-btn").onclick = () => { deleteItem(id); closeDetail(); };
+  document.getElementById("detail-edit-btn").onclick   = () => { closeDetail(); openEditForm(id); };
+  document.getElementById("detail-overlay").classList.remove("hidden");
+}
+function closeDetail() { document.getElementById("detail-overlay").classList.add("hidden"); currentDetailId = null; }
+function closeDetailIfBg(e) { if (e.target === document.getElementById("detail-overlay")) closeDetail(); }
+
+// ── Add / Edit form ───────────────────────────────────────────────────────────
+function openAddForm() {
+  editId = null;
+  document.getElementById("form-modal-title").textContent = "Add Calendar Item";
+  document.getElementById("form-submit-btn").textContent  = "Add to Calendar";
+  document.getElementById("f-title").value       = "";
+  document.getElementById("f-date").value        = "";
+  document.getElementById("f-recurrence").value  = "none";
+  document.getElementById("f-category").value    = "meeting";
+  document.getElementById("f-description").value = "";
+  document.getElementById("f-addedby").value     = "";
+  document.getElementById("f-nth-week").value    = "1";
+  document.getElementById("f-nth-day").value     = "0";
+  clearErrors();
+  onRecurrenceChange();
+  document.getElementById("form-overlay").classList.remove("hidden");
+}
+function openEditForm(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  // For recurring items, show scope selection modal first
+  if (item.recurrence !== "none") {
+    pendingScopeEditId = id;
+    editScope = "future"; // default
+    document.getElementById("scope-opt-future").classList.add("recommended");
+    document.getElementById("scope-opt-all").classList.remove("recommended");
+    document.getElementById("scope-overlay").classList.remove("hidden");
+    return;
+  }
+
+  // Non-recurring: go straight to edit form
+  editScope = "all";
+  _openEditFormDirect(id);
+}
+
+function _openEditFormDirect(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  editId = id;
+  document.getElementById("form-modal-title").textContent = "Edit Calendar Item";
+  document.getElementById("form-submit-btn").textContent  = "Save Changes";
+  document.getElementById("f-title").value       = item.title;
+  document.getElementById("f-date").value        = item.date;
+  document.getElementById("f-recurrence").value  = item.recurrence === "monthly-nth" ? "monthly" : item.recurrence;
+  document.getElementById("f-category").value    = item.category;
+  document.getElementById("f-description").value = item.description;
+  document.getElementById("f-addedby").value     = item.addedBy;
+  document.getElementById("f-nth-week").value    = item.nthWeek || "1";
+  document.getElementById("f-nth-day").value     = item.nthDay != null ? item.nthDay : "0";
+  clearErrors();
+  onRecurrenceChange();
+
+  // Show a hint about the edit scope for recurring items
+  const scopeHint = document.getElementById("edit-scope-hint");
+  if (item.recurrence !== "none" && editScope === "future") {
+    scopeHint.style.display = "block";
+    scopeHint.textContent = "✏️ Changes will apply from today forward only. Past occurrences will remain unchanged.";
+  } else if (item.recurrence !== "none" && editScope === "all") {
+    scopeHint.style.display = "block";
+    scopeHint.textContent = "✏️ Changes will apply to all occurrences, including past dates.";
+  } else {
+    scopeHint.style.display = "none";
+  }
+
+  document.getElementById("form-overlay").classList.remove("hidden");
+}
+
+// ── Scope modal helpers ──
+let pendingScopeEditId = null;
+
+function selectScope(scope) {
+  editScope = scope;
+  document.getElementById("scope-opt-future").classList.toggle("recommended", scope === "future");
+  document.getElementById("scope-opt-all").classList.toggle("recommended", scope === "all");
+}
+function closeScopeModal() {
+  document.getElementById("scope-overlay").classList.add("hidden");
+  pendingScopeEditId = null;
+}
+function closeScopeIfBg(e) {
+  if (e.target === document.getElementById("scope-overlay")) closeScopeModal();
+}
+function confirmScope() {
+  const id = pendingScopeEditId;
+  closeScopeModal();
+  if (id) _openEditFormDirect(id);
+}
+function closeForm() { document.getElementById("form-overlay").classList.add("hidden"); editId = null; }
+function closeFormIfBg(e) { if (e.target === document.getElementById("form-overlay")) closeForm(); }
+
+function onRecurrenceChange() {
+  const val = document.getElementById("f-recurrence").value;
+  const hint = document.getElementById("recur-hint");
+  const dateLabel = document.getElementById("f-date-label");
+  const nthOpts = document.getElementById("monthly-nth-options");
+  nthOpts.classList.toggle("hidden", val !== "monthly");
+  if (val === "none") {
+    hint.style.display = "none";
+    dateLabel.textContent = "Date *";
+  } else {
+    hint.style.display = "block";
+    if (val === "monthly") {
+      const w = document.getElementById("f-nth-week").value;
+      const d = document.getElementById("f-nth-day").value;
+      document.getElementById("recur-hint-label").textContent =
+        `monthly on the ${NTH_WEEK_LABELS[w].toLowerCase()} ${DAY_NAMES[d]}`;
+    } else {
+      document.getElementById("recur-hint-label").textContent = RECURRENCE_LABELS[val].toLowerCase();
+    }
+    dateLabel.textContent = "Start Date *";
+  }
+}
+
+function clearErrors() {
+  ["err-title","err-date","err-addedby"].forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+}
+
+async function handleSubmit() {
+  clearErrors();
+  const title   = document.getElementById("f-title").value.trim();
+  const date    = document.getElementById("f-date").value;
+  const addedBy = document.getElementById("f-addedby").value.trim();
+  let valid = true;
+  if (!title)   { document.getElementById("err-title").classList.remove("hidden");   valid = false; }
+  if (!date)    { document.getElementById("err-date").classList.remove("hidden");    valid = false; }
+  if (!addedBy) { document.getElementById("err-addedby").classList.remove("hidden"); valid = false; }
+  if (!valid) return;
+
+  const payload = {
+    title,
+    date,
+    recurrence: document.getElementById("f-recurrence").value,
+    category:   document.getElementById("f-category").value,
+    description: document.getElementById("f-description").value.trim(),
+    addedBy
+  };
+
+  if (payload.recurrence === "monthly") {
+    payload.nthWeek = parseInt(document.getElementById("f-nth-week").value);
+    payload.nthDay  = parseInt(document.getElementById("f-nth-day").value);
+  }
+
+  if (editId) {
+    const idx = items.findIndex(i => i.id === editId);
+    if (idx !== -1) {
+      const original = items[idx];
+      const isRecurring = original.recurrence !== "none";
+
+      if (isRecurring && editScope === "future") {
+        // Split: cap the original item to end yesterday, create new item from today
+        const todayDate = new Date();
+        const yesterday = new Date(todayDate);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.getFullYear() + "-" +
+          String(yesterday.getMonth() + 1).padStart(2, "0") + "-" +
+          String(yesterday.getDate()).padStart(2, "0");
+        const todayStr = todayDate.getFullYear() + "-" +
+          String(todayDate.getMonth() + 1).padStart(2, "0") + "-" +
+          String(todayDate.getDate()).padStart(2, "0");
+
+        // Set endDate on original so past occurrences remain
+        items[idx] = { ...original, endDate: yesterdayStr };
+
+        // Create the new item with edited data, starting from today
+        const newItem = { ...payload, id: genId(), date: todayStr };
+        items.push(newItem);
+        showToast("Future occurrences updated", "success");
+      } else {
+        // Edit all: replace entire item (original behavior)
+        items[idx] = { ...payload, id: editId };
+        showToast("Item updated successfully", "success");
+      }
+    }
+  } else {
+    items.push({ ...payload, id: genId() });
+    showToast("Item added to calendar", "success");
+  }
+
+  closeForm();
+  await saveItems();
+  renderCalendar();
+  if (document.getElementById("page-allitems").style.display !== "none") renderAllItems();
+}
+
+async function deleteItem(id) {
+  items = items.filter(i => i.id !== id);
+  await saveItems();
+  showToast("Item removed", "error");
+  renderCalendar();
+  if (document.getElementById("page-allitems").style.display !== "none") renderAllItems();
+}
+
+// ── All Items page ────────────────────────────────────────────────────────────
+function renderAllItems() {
+  const totalBadge = document.getElementById("allitems-total-badge");
+  totalBadge.textContent = `${items.length} total`;
+
+  // Build filter row
+  const filterRow = document.getElementById("filter-row");
+  filterRow.innerHTML = "";
+
+  function makeFilterPill(val, label, color) {
+    const btn = document.createElement("button");
+    btn.className = `filter-pill${activeFilter === val ? " active" : ""}`;
+    btn.textContent = label;
+    if (activeFilter === val) btn.style.background = color;
+    btn.addEventListener("click", () => {
+      activeFilter = activeFilter === val ? "all" : val;
+      renderAllItems();
+    });
+    filterRow.appendChild(btn);
+  }
+
+  makeFilterPill("all", `All Items (${items.length})`, "#1E3A5F");
+  Object.entries(CATEGORY_META).forEach(([cat, meta]) => {
+    const count = items.filter(i => i.category === cat).length;
+    makeFilterPill(cat, `${meta.icon} ${meta.label} (${count})`, meta.pill);
+  });
+
+  // Body
+  const body = document.getElementById("allitems-body");
+  body.innerHTML = "";
+
+  if (items.length === 0) {
+    body.innerHTML = `
+      <div class="allitems-empty">
+        <div class="allitems-empty-icon">📭</div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;color:#374151;">No items yet</div>
+        <div style="font-size:13px;color:#6B7280;margin-top:6px;">Go back to the calendar to add your first item.</div>
+      </div>`;
+    return;
+  }
+
+  const categoriesToShow = activeFilter === "all"
+    ? Object.keys(CATEGORY_META)
+    : [activeFilter];
+
+  categoriesToShow.forEach(cat => {
+    const meta = CATEGORY_META[cat];
+    const catItems = items.filter(i => i.category === cat);
+    if (catItems.length === 0) return;
+
+    const section = document.createElement("div");
+    section.className = "cat-section";
+
+    // Section header
+    const hdr = document.createElement("div");
+    hdr.className = "cat-section-header";
+    hdr.style.borderBottomColor = meta.pill;
+    hdr.innerHTML = `
+      <span class="cat-section-icon">${meta.icon}</span>
+      <div>
+        <div class="cat-section-title" style="color:#111827;">${meta.label}</div>
+        <div class="cat-section-count">${catItems.length} item${catItems.length !== 1 ? "s" : ""}</div>
+      </div>`;
+    section.appendChild(hdr);
+
+    // Cards
+    [...catItems].sort((a,b) => a.date.localeCompare(b.date)).forEach(item => {
+      const [y, m, d] = item.date.split("-");
+      const dateStr = `${MONTHS[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+      const card = document.createElement("div");
+      card.className = "ai-card";
+      card.style.borderColor = meta.pill;
+      card.innerHTML = `
+        <div class="ai-card-main">
+          <div class="ai-card-top">
+            <div class="ai-card-title">${escHtml(item.title)}</div>
+            <span class="recur-badge" style="background:${item.recurrence === "none" ? "#F3F4F6" : meta.tag};color:${item.recurrence === "none" ? "#6B7280" : meta.tagText};">
+              ${item.recurrence === "none" ? "📌" : "🔁"} ${getRecurrenceLabel(item)}
+            </span>
+          </div>
+          <div class="ai-card-meta">
+            ${item.recurrence === "none" ? dateStr : "Starting " + dateStr}${item.endDate ? ` · Ended ${(() => { const [ey,em,ed] = item.endDate.split("-"); return MONTHS[parseInt(em)-1] + " " + parseInt(ed) + ", " + ey; })()}` : ""} · Added by <strong>${escHtml(item.addedBy)}</strong>
+          </div>
+          ${item.description ? `<div class="ai-card-desc">${escHtml(item.description)}</div>` : ""}
+        </div>
+        <div class="ai-card-actions">
+          <button class="btn-ghost" style="font-size:11px;padding:5px 12px;" data-edit="${item.id}">Edit</button>
+          <button class="btn-danger" style="font-size:11px;padding:5px 12px;" data-delete="${item.id}">Delete</button>
+        </div>`;
+      card.querySelector("[data-edit]").addEventListener("click", e => {
+        e.stopPropagation();
+        showPage("calendar");
+        openEditForm(item.id);
+      });
+      card.querySelector("[data-delete]").addEventListener("click", e => {
+        e.stopPropagation();
+        deleteItem(item.id);
+      });
+      card.addEventListener("click", () => {
+        showPage("calendar");
+        openDetail(item.id);
+      });
+      section.appendChild(card);
+    });
+
+    body.appendChild(section);
+  });
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const el = document.getElementById("toast");
+  clearTimeout(toastTimer);
+  el.textContent = (type === "error" ? "🗑 " : "✓ ") + msg;
+  el.style.background = type === "error" ? "#FEF2F2" : "#F0FDF4";
+  el.style.color       = type === "error" ? "#991B1B" : "#166534";
+  el.style.border      = `1px solid ${type === "error" ? "#FECACA" : "#BBF7D0"}`;
+  el.classList.add("show");
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+}
+
+// ── Utility ───────────────────────────────────────────────────────────────────
+function escHtml(str) {
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+
+// ── Authentication ────────────────────────────────────────────────────────────
+// Only write actions (add, edit, delete) require authentication.
+// Viewing the calendar and all items is public.
+const AUTH = { user: 'PrestonBoard', pass: '^5JQ2Yamki8EMLn' };
+const SESSION_KEY = 'ppha_auth';
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000;
+let loginAttempts = 0;
+let lockoutUntil = 0;
+let pendingAction = null;
+
+function isAuthenticated() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (raw) { const s = JSON.parse(raw); return s.authenticated && s.user === AUTH.user; }
+  } catch(e) {}
+  return false;
+}
+
+// Gate write actions — show login modal if not authed, then run fn on success
+function requireAuth(fn) {
+  if (isAuthenticated()) { fn(); return; }
+  pendingAction = fn;
+  openLoginModal();
+}
+
+function openLoginModal() {
+  document.getElementById('auth-modal-overlay').classList.remove('hidden');
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('auth-attempts-msg').textContent = '';
+  setTimeout(() => document.getElementById('auth-username').focus(), 60);
+}
+
+function closeLoginModal() {
+  document.getElementById('auth-modal-overlay').classList.add('hidden');
+  pendingAction = null;
+}
+
+function closeAuthIfBg(e) {
+  if (e.target === document.getElementById('auth-modal-overlay')) closeLoginModal();
+}
+
+function doLogin() {
+  const errorEl    = document.getElementById('auth-error');
+  const attemptsEl = document.getElementById('auth-attempts-msg');
+  const btn        = document.getElementById('auth-login-btn');
+
+  if (Date.now() < lockoutUntil) {
+    const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
+    document.getElementById('auth-error-msg').textContent = `Too many attempts. Please wait ${mins} minute${mins !== 1 ? 's' : ''}.`;
+    errorEl.classList.add('show');
+    return;
+  }
+
+  const user = document.getElementById('auth-username').value.trim();
+  const pass = document.getElementById('auth-password').value;
+
+  if (user === AUTH.user && pass === AUTH.pass) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ authenticated: true, user }));
+    loginAttempts = 0;
+    attemptsEl.textContent = '';
+    errorEl.classList.remove('show');
+    document.getElementById('auth-modal-overlay').classList.add('hidden');
+    updateNavAuth();
+    if (pendingAction) { const fn = pendingAction; pendingAction = null; fn(); }
+  } else {
+    loginAttempts++;
+    if (loginAttempts >= MAX_ATTEMPTS) {
+      lockoutUntil = Date.now() + LOCKOUT_MS;
+      btn.disabled = true;
+      setTimeout(() => { btn.disabled = false; loginAttempts = 0; lockoutUntil = 0; attemptsEl.textContent = ''; }, LOCKOUT_MS);
+      document.getElementById('auth-error-msg').textContent = 'Account locked for 15 minutes due to too many failed attempts.';
+      errorEl.classList.add('show');
+    } else {
+      const rem = MAX_ATTEMPTS - loginAttempts;
+      document.getElementById('auth-error-msg').textContent = 'Invalid username or password.';
+      errorEl.classList.add('show');
+      attemptsEl.textContent = `${rem} attempt${rem !== 1 ? 's' : ''} remaining`;
+    }
+  }
+}
+
+function doSignOut() {
+  sessionStorage.removeItem(SESSION_KEY);
+  updateNavAuth();
+  showToast('Signed out successfully', 'success');
+}
+
+function toggleAuthPw() {
+  const inp = document.getElementById('auth-password');
+  const btn = document.getElementById('auth-pw-toggle');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function updateNavAuth() {
+  const area = document.getElementById('nav-auth-area');
+  if (isAuthenticated()) {
+    const raw = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    area.innerHTML = `
+      <span style="color:rgba(255,255,255,.65);font-size:11px;display:flex;align-items:center;gap:5px;">
+        <span>👤</span><span style="font-weight:600;color:rgba(255,255,255,.9);">${escHtml(raw.user)}</span>
+      </span>
+      <button class="btn-signout" onclick="doSignOut()">Sign Out</button>`;
+  } else {
+    area.innerHTML = `<button class="btn-signin-nav" onclick="openLoginModal()">🔒 Board Sign In</button>`;
+  }
+}
+
+// Intercept write actions to require auth
+const _openAddForm  = openAddForm;
+const _openEditForm = openEditForm;
+const _deleteItem   = deleteItem;
+openAddForm  = ()   => requireAuth(_openAddForm);
+openEditForm = (id) => requireAuth(() => _openEditForm(id));
+deleteItem   = (id) => requireAuth(() => _deleteItem(id));
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+(async () => {
+  viewYear  = today.getFullYear();
+  viewMonth = today.getMonth();
+  updateNavAuth();
+  await loadItems();
+})();
+
+</script>
+</body>
+</html>
