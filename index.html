@@ -154,7 +154,19 @@
     .day-num.wknd-num { color: var(--text-4); }
     .event-pill { display: block; width: 100%; text-align: left; border: none; border-radius: 4px; padding: 2px 6px; margin-bottom: 2px; font-size: 10.5px; font-weight: 700; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .15s, transform .12s; font-family: 'Source Sans 3', sans-serif; line-height: 1.65; }
     .event-pill:hover { opacity: .85; transform: translateX(1px); }
-    .more-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; color: #FFF; background: var(--text-2); border-radius: 10px; padding: 1px 7px; margin-top: 1px; letter-spacing: .02em; }
+    .more-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; color: #FFF; background: var(--text-2); border-radius: 10px; padding: 2px 8px; margin-top: 1px; letter-spacing: .02em; cursor: pointer; border: none; font-family: 'Source Sans 3', sans-serif; transition: background .15s, transform .12s; }
+    .more-badge:hover { background: var(--brand); transform: translateY(-1px); }
+
+    /* ── Day Popup ── */
+    .day-popup { background: var(--surface); border-radius: 14px; width: 100%; max-width: 360px; overflow: hidden; box-shadow: 0 20px 60px var(--shadow-md); }
+    .day-popup-header { background: var(--brand); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .day-popup-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: #FFF; }
+    .day-popup-count { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 2px; }
+    .day-popup-body { padding: 12px; max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .day-popup-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: background .15s; margin-bottom: 4px; border-left: 4px solid; background: var(--surface); box-shadow: 0 1px 3px var(--shadow-sm); }
+    .day-popup-item:hover { background: var(--blue-light); }
+    .day-popup-item-title { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .day-popup-item-meta { font-size: 11px; color: var(--text-2); margin-top: 2px; }
     .cal-legend { border-top: 2px solid var(--border); padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 8px 22px; background: var(--surface-alt); }
     .legend-item { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 7px; font-weight: 600; }
     .legend-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -700,6 +712,22 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════
+     DAY POPUP
+══════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="day-popup-overlay" onclick="closeDayPopupIfBg(event)">
+  <div class="day-popup">
+    <div class="day-popup-header">
+      <div>
+        <div class="day-popup-title" id="day-popup-title"></div>
+        <div class="day-popup-count" id="day-popup-count"></div>
+      </div>
+      <button class="nav-btn" onclick="closeDayPopup()" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#FFF;">✕</button>
+    </div>
+    <div class="day-popup-body" id="day-popup-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
      TOAST
 ══════════════════════════════════════════════════ -->
 <div id="toast"></div>
@@ -728,12 +756,12 @@ function getRecurrenceLabel(item) {
 }
 
 const CATEGORY_META = {
-  meeting:  { pill:"#2563EB", pillText:"#FFF", tag:"#DBEAFE", tagText:"#1E3A8A", dot:"#2563EB", icon:"🗓", label:"Meetings" },
-  deadline: { pill:"#DC2626", pillText:"#FFF", tag:"#FEE2E2", tagText:"#991B1B", dot:"#DC2626", icon:"⏰", label:"Deadlines" },
-  event:    { pill:"#16A34A", pillText:"#FFF", tag:"#DCFCE7", tagText:"#166534", dot:"#16A34A", icon:"🎯", label:"Events" },
-  review:   { pill:"#9333EA", pillText:"#FFF", tag:"#F3E8FF", tagText:"#6B21A8", dot:"#9333EA", icon:"📋", label:"Reviews" },
-  "vendor-onsite": { pill:"#0284C7", pillText:"#FFF", tag:"#E0F2FE", tagText:"#075985", dot:"#0284C7", icon:"🏢", label:"Vendor Onsite" },
-  other:    { pill:"#B45309", pillText:"#FFF", tag:"#FEF3C7", tagText:"#92400E", dot:"#B45309", icon:"📌", label:"Other" }
+  meeting:       { pill:"#D97706", pillText:"#FFF", tag:"#FEF3C7", tagText:"#78350F", dot:"#D97706", icon:"🗓", label:"Meetings" },
+  deadline:      { pill:"#DC2626", pillText:"#FFF", tag:"#FEE2E2", tagText:"#991B1B", dot:"#DC2626", icon:"⏰", label:"Deadlines" },
+  event:         { pill:"#9333EA", pillText:"#FFF", tag:"#F3E8FF", tagText:"#6B21A8", dot:"#9333EA", icon:"🎯", label:"Events" },
+  review:        { pill:"#0284C7", pillText:"#FFF", tag:"#E0F2FE", tagText:"#075985", dot:"#0284C7", icon:"📋", label:"Reviews" },
+  "vendor-onsite": { pill:"#16A34A", pillText:"#FFF", tag:"#DCFCE7", tagText:"#166534", dot:"#16A34A", icon:"🏢", label:"Vendor Onsite" },
+  other:         { pill:"#2563EB", pillText:"#FFF", tag:"#DBEAFE", tagText:"#1E3A8A", dot:"#2563EB", icon:"📌", label:"Other" }
 };
 
 // ── State ────────────────────────────────────────────────────────────────────
@@ -936,9 +964,14 @@ function renderCalendar() {
       cell.appendChild(pill);
     });
     if (dayItems.length > 3) {
-      const more = document.createElement("div");
+      const more = document.createElement("button");
       more.className = "more-badge";
       more.textContent = `+${dayItems.length - 3} more`;
+      more.title = "Show all events for this day";
+      more.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openDayPopup(viewYear, viewMonth, d, dayItems);
+      });
       cell.appendChild(more);
     }
     grid.appendChild(cell);
@@ -1044,6 +1077,32 @@ function openDetail(id) {
 }
 function closeDetail() { document.getElementById("detail-overlay").classList.add("hidden"); currentDetailId = null; }
 function closeDetailIfBg(e) { if (e.target === document.getElementById("detail-overlay")) closeDetail(); }
+
+// ── Day Popup ─────────────────────────────────────────────────────────────────
+function openDayPopup(year, month, day, dayItems) {
+  const dow = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date(year, month, day).getDay()];
+  document.getElementById("day-popup-title").textContent = `${dow}, ${MONTHS[month]} ${day}`;
+  document.getElementById("day-popup-count").textContent = `${dayItems.length} event${dayItems.length !== 1 ? "s" : ""}`;
+  const body = document.getElementById("day-popup-body");
+  body.innerHTML = "";
+  dayItems.forEach(item => {
+    const c = CATEGORY_META[item.category];
+    const el = document.createElement("div");
+    el.className = "day-popup-item";
+    el.style.borderColor = c.pill;
+    el.innerHTML = `
+      <div style="flex:1;min-width:0;">
+        <div class="day-popup-item-title">${escHtml(item.title)}</div>
+        <div class="day-popup-item-meta">${c.icon} ${c.label} · ${getRecurrenceLabel(item)}</div>
+      </div>
+      <span style="color:var(--text-4);font-size:16px;flex-shrink:0;">›</span>`;
+    el.addEventListener("click", () => { closeDayPopup(); openDetail(item.id); });
+    body.appendChild(el);
+  });
+  document.getElementById("day-popup-overlay").classList.remove("hidden");
+}
+function closeDayPopup() { document.getElementById("day-popup-overlay").classList.add("hidden"); }
+function closeDayPopupIfBg(e) { if (e.target === document.getElementById("day-popup-overlay")) closeDayPopup(); }
 
 // ── Add / Edit form ───────────────────────────────────────────────────────────
 function openAddForm() {
