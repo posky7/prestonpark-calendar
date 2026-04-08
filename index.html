@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0D1B2E" />
+  <meta name="theme-color" content="#4338CA" />
+  <!-- Nav: indigo #4338CA — 7.5:1 contrast with white (WCAG AAA) -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="PP Calendar" />
@@ -23,7 +24,7 @@
     .btn-primary:hover { background: #D97706; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(245,158,11,.55); }
     .btn-ghost { background: #FFF; color: #1E293B; border: 1.5px solid #CBD5E1; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 600; transition: all .18s; }
     .btn-ghost:hover { border-color: #2563EB; color: #2563EB; background: #EEF2FF; }
-    .btn-all-items { background: #FFF; color: #0D1B2E; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .04em; transition: all .18s; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+    .btn-all-items { background: #FFF; color: #4338CA; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .04em; transition: all .18s; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
     .btn-all-items:hover { background: #F1F5F9; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.22); }
     .btn-back { background: rgba(255,255,255,.15); color: #FFF; border: 1.5px solid rgba(255,255,255,.55); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 600; transition: all .18s; }
     .btn-back:hover { background: rgba(255,255,255,.28); border-color: rgba(255,255,255,.8); }
@@ -64,7 +65,7 @@
     .recur-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
 
     /* ── Top Nav ── */
-    #top-nav { background: #0D1B2E; box-shadow: 0 2px 12px rgba(0,0,0,.35); }
+    #top-nav { background: #4338CA; box-shadow: 0 2px 12px rgba(0,0,0,.35); }
     .nav-inner { max-width: 1140px; margin: 0 auto; padding: 16px max(20px, env(safe-area-inset-right, 20px)) 16px max(20px, env(safe-area-inset-left, 20px)); display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
     .nav-brand-sub { color: rgba(255,255,255,.5); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 2px; }
     .nav-brand-title { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3.5vw, 26px); font-weight: 900; color: #FFF; line-height: 1.1; }
@@ -102,7 +103,7 @@
 
     /* ── Sidebar ── */
     .sidebar-card { background: #FFF; border-radius: 12px; box-shadow: 0 2px 16px rgba(15,23,42,.1); overflow: hidden; }
-    .sidebar-header { background: #0D1B2E; padding: 14px 16px; }
+    .sidebar-header { background: #4338CA; padding: 14px 16px; }
     .sidebar-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 2px; font-weight: 700; }
     .sidebar-month { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #FFF; }
     .sidebar-count { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 3px; }
@@ -158,7 +159,7 @@
 
     /* ── Recurrence Edit Scope Modal ── */
     .scope-modal { background: #FFF; border-radius: 14px; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 20px 60px rgba(15,23,42,.25); }
-    .scope-modal-header { background: #0D1B2E; padding: 22px 26px; text-align: center; }
+    .scope-modal-header { background: #4338CA; padding: 22px 26px; text-align: center; }
     .scope-modal-icon { font-size: 28px; margin-bottom: 8px; }
     .scope-modal-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #FFF; }
     .scope-modal-subtitle { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 4px; }
@@ -232,7 +233,7 @@
       box-shadow: 0 28px 70px rgba(15,23,42,.3);
     }
     .auth-modal-header {
-      background: #0D1B2E;
+      background: #4338CA;
       padding: 28px 32px 24px;
       text-align: center;
     }
@@ -394,7 +395,7 @@
      ALL ITEMS PAGE
 ══════════════════════════════════════════════════ -->
 <div id="page-allitems" style="display:none;">
-  <div id="allitems-nav" style="background:#0D1B2E;border-bottom:none;">
+  <div id="allitems-nav" style="background:#4338CA;border-bottom:none;">
     <div style="max-width:860px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
       <button class="btn-back" onclick="showPage('calendar')">← Calendar</button>
       <div style="flex:1;">
